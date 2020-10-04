@@ -17,10 +17,26 @@
           <th><%= @user.introduction %></th>
           <th></th>
         </tr>
+        <tr>
+          <th>follows</th>
+          <th><%= link_to @user.follower.count, user_followlist_path(@user) %></th>
+        </tr>
+        <tr>
+          <th>followers</th>
+          <th><%= link_to @user.followed.count, user_followerlist_path(@user) %></th>
+        </tr>
       </table>
-      
+
       <button type="button" class="btn btn-default btn-lg active" aria-label="Left Align"><%= link_to '', edit_user_path(current_user.id), class: "glyphicon glyphicon-wrench" %></button>
-      
+      <!--フォローボタン-->
+      <% unless @user == current_user %>
+        <% if current_user.following?(@user) %>
+            <%= link_to 'フォロー外す', destroy_path(@user.id), method: :POST , class: "btn btn-info active"%>
+        <% else %>
+            <%= link_to 'フォローする', create_path(@user.id), method: :POST , class: "btn btn-info active" %>
+        <% end %>
+      <% end %>
+
       <!--投稿部分-->
       <h1>New book</h1>
       <!-- form_with部分 -->
@@ -32,7 +48,7 @@
         <%= f.submit 'Create Book', class: "btn btn-info active"%>
       <% end %>
     </div>
-    
+
     <div class="col-xs-9">
      <h1>Users</h1>
       <table class="table">
@@ -44,12 +60,24 @@
               <th></th>
             </tr>
           </thead>
-        
+
           <tbody>
             <% @users.each do |user| %>
               <tr>
-                <td><%= attachment_image_tag user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg", size:"60x50"%></td>
+                <td><%= attachment_image_tag user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg", size:"60x50" %></td>
                 <td><%= user.name %></td>
+                <td><%= "フォロー数: #{user.follower.count}" %></td>
+                <td><%= "フォロワー数: #{user.followed.count}" %></td>
+                <td>
+                  <!--フォローボタン-->
+                  <% if current_user.id != user.id %>
+                    <% if current_user.following?(user) %>
+                        <%= link_to 'フォロー外す', destroy_path(user.id), method: :POST , class: "btn btn-info active"%>
+                    <% else %>
+                        <%= link_to 'フォローする', create_path(user.id), method: :POST , class: "btn btn-info active" %>
+                    <% end %>
+                  <% end %>
+                </td>
                 <td><%= link_to "Show", user_path(user.id), class: "btn btn-info active" %></td>
               </tr>
             <% end %>

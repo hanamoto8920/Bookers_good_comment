@@ -21,20 +21,34 @@
     <div class="col-xs-3">
       <!--マイページ表示部分-->
       <h1>User info</h1>
-      <%= attachment_image_tag @user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg"%>
+      <%= attachment_image_tag @user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg", size:"60x60"%>
       <table class="table">
         <tr>
           <th>name</th>
           <th><%= @user.name %></th>
-          <th></th>
         </tr>
         <tr>
           <th>introduction</th>
           <th><%= @user.introduction %></th>
-          <th></th>
+        </tr>
+        <tr>
+          <th>follows</th>
+          <th><%= link_to @user.follower.count, user_followlist_path(@user) %></th>
+        </tr>
+        <tr>
+          <th>followers</th>
+          <th><%= link_to @user.followed.count, user_followerlist_path(@user) %></th>
         </tr>
       </table>
       <button type="button" class="btn btn-default" aria-label="Left Align"><%= link_to '', edit_user_path(@user.id), class: "glyphicon glyphicon-wrench" %></button>
+      <!--フォローボタン-->
+      <% unless @user == current_user %>
+        <% if current_user.following?(@user) %>
+            <%= link_to 'フォロー外す', destroy_path(@user.id), method: :POST , class: "btn btn-info active"%>
+        <% else %>
+            <%= link_to 'フォローする', create_path(@user.id), method: :POST , class: "btn btn-info active" %>
+        <% end %>
+      <% end %>
 
 
       <!--投稿部分-->
@@ -65,7 +79,7 @@
           <% @books.each do |book| %>
             <td>
               <%= link_to user_path(@user.id) do %>
-                <%= attachment_image_tag @user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg"%>
+                <%= attachment_image_tag @user, :profile_image, :fill, 50, 50, fallback: "no_image.jpg", size:"50x50"%>
               <% end %>
             </td>
             <td><%=  link_to book.title, book_path(book.id) %></td>

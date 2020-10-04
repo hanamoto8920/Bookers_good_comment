@@ -31,9 +31,25 @@
           <th><%= @user.introduction %></th>
           <th></th>
         </tr>
+        <tr>
+          <th>follows</th>
+          <th><%= link_to @user.follower.count, user_followlist_path(@user) %></th>
+        </tr>
+        <tr>
+          <th>followers</th>
+          <th><%= link_to @user.followed.count, user_followerlist_path(@user) %></th>
+        </tr>
       </table>
       <button type="button" class="btn btn-default" aria-label="Left Align"><%= link_to '', edit_user_path(current_user.id), class: "glyphicon glyphicon-wrench" %></button>
-
+　　　<!--フォローボタン-->
+      <% unless @user == current_user %>
+        <% if current_user.following?(@user) %>
+            <%= link_to 'フォロー外す', destroy_path(@user.id), method: :POST , class: "btn btn-info active"%>
+        <% else %>
+            <%= link_to 'フォローする', create_path(@user.id), method: :POST , class: "btn btn-info active" %>
+        <% end %>
+      <% end %>
+　　　
       <!--投稿部分-->
       <h1>New book</h1>
       <!-- form_with部分 -->

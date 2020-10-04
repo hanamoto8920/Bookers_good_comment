@@ -18,14 +18,26 @@ Rails.application.routes.draw do
   # # ホームのコントローラ
   root "homes#top"
   get "home/about" => "homes#index"
-  
+
 
   # ユーザーモデルのルーティング
   # ユーザーコントローラ
-  resources :users, only: [:show, :edit, :update, :index]
+  resources :users, only: [:show, :edit, :update, :index] do
+    # フォローリスト
+    get "followlist" => "relationships#followlist" 
+    # フォロワーリスト
+    get "followerlist" => "relationships#followerlist" 
   
+  end
+
+
   # ログイン認証が成功した後、投稿画像の一覧画面が表示される
   # root 'books#index'
+
+  # フォローのルーティング
+  post 'create/:id' => 'relationships#create', as: 'create' # フォローする
+  post 'destroy/:id' => 'relationships#destroy', as: 'destroy' # フォロー外す
+  
 
 end
 
