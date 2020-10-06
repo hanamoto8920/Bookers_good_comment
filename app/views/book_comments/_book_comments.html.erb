@@ -1,0 +1,32 @@
+<!--コメント件数の部分-->
+<div class="comment-list">
+    <div class="float-wrapper">
+        <h2 class="comment-count"><%= book.book_comments.count %>件コメント</h2>
+    </div>
+</div>
+
+<table class="table">
+    <tbody>
+        <!--コメント一覧部分-->
+        <% book.book_comments.each do |book_comment| %>
+     <tr>
+           <td><%= attachment_image_tag book_comment.user, :profile_image, :fill, 50, 50, fallback: "no_image.jpg", size:"50x50" %></td>
+           <td><%= book_comment.comment %></td>
+           <td>
+               <% if book_comment.user == current_user %>
+                   <%= link_to "Destroy", book_book_comment_path(book_comment.book,book_comment), method: :delete, remote: true, class: "btn btn-danger pull-right" %>
+               <% end %>
+           </td>
+     </tr>
+        <% end %>
+    </tbody>
+</table>
+
+
+<!--コメントフォーム-->
+<%= form_with(model:[book,book_comment] ,remote: true) do |f| %>
+            <div id="error_explanation">
+            </div>
+    <%= f.text_area :comment, class: "form-control",placeholder: "ここへコメントを記入！！" %>
+    <%= f.submit "送信する！" %>
+<% end %>

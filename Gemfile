@@ -74,3 +74,7 @@ group :test do
   gem 'rspec-rails'
   gem "factory_bot_rails"
   gem 'faker'end
+
+  # 非同期通信
+  gem 'jquery-rails'
+gem 'pry-rails'
